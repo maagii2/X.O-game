@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XO Game</title>
+    <link rel="stylesheet" href="./style.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .xo-cell {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 48px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center mt-5">
+        <h1>XO Game</h1>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-4 xo-cell" onclick="makeMove(0, 0)"></div>
+                    <div class="col-4 xo-cell" onclick="makeMove(0, 1)"></div>
+                    <div class="col-4 xo-cell" onclick="makeMove(0, 2)"></div>
+                </div>
+                <div class="row">
+                    <div class="col-4 xo-cell" onclick="makeMove(1, 0)"></div>
+                    <div class="col-4 xo-cell" onclick="makeMove(1, 1)"></div>
+                    <div class="col-4 xo-cell" onclick="makeMove(1, 2)"></div>
+                </div>
+                <div class="row">
+                    <div class="col-4 xo-cell" onclick="makeMove(2, 0)"></div>
+                    <div class="col-4 xo-cell" onclick="makeMove(2, 1)"></div>
+                    <div class="col-4 xo-cell" onclick="makeMove(2, 2)"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <button class="btn btn-primary" onclick="resetGame()">Reset Game</button>
+        </div>
+    </div>
+ 
+    <!-- Bootstrap & jQuery JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        let currentPlayer = "X";
+        let gameBoard = [
+            ["", "", ""],
+            ["", "", ""],
+            ["", "", ""]
+        ];
+ 
+        function makeMove(row, col) {
+            if (gameBoard[row][col] === "") {
+                gameBoard[row][col] = currentPlayer;
+                $(`[onclick="makeMove(${row}, ${col})"]`).text(currentPlayer);
+                checkWin();
+                currentPlayer = currentPlayer === "X" ? "O" : "X";
+            }
+        }
+ 
+        function checkWin() {
+            // Check rows
+            for (let i = 0; i < 3; i++) {
+                if (gameBoard[i][0] !== "" && gameBoard[i][0] === gameBoard[i][1] && gameBoard[i][0] === gameBoard[i][2]) {
+                    alert(`${gameBoard[i][0]} wins!`);
+                    resetGame();
+                    return;
+                }
+            }
+ 
+            // Check columns
+            for (let i = 0; i < 3; i++) {
+                if (gameBoard[0][i] !== "" && gameBoard[0][i] === gameBoard[1][i] && gameBoard[0][i] === gameBoard[2][i]) {
+                    alert(`${gameBoard[0][i]} wins!`);
+                    resetGame();
+                    return;
+                }
+            }
+ 
+            // Check diagonals
+            if (gameBoard[0][0] !== "" && gameBoard[0][0] === gameBoard[1][1] && gameBoard[0][0] === gameBoard[2][2]) {
+                alert(`${gameBoard[0][0]} wins!`);
+                resetGame();
+                return;
+            }
+ 
+            if (gameBoard[0][2] !== "" && gameBoard[0][2] === gameBoard[1][1] && gameBoard[0][2] === gameBoard[2][0]) {
+                alert(`${gameBoard[0][2]} wins!`);
+                resetGame();
+                return;
+            }
+ 
+            // Check for draw
+            let isDraw = true;
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (gameBoard[i][j] === "") {
+                        isDraw = false;
+                        break;
+                    }
+                }
+            }
+            if (isDraw) {
+                alert("It's a draw!");
+                resetGame();
+            }
+        }
+ 
+        function resetGame() {
+            currentPlayer = "X";
+            gameBoard = [
+                ["", "", ""],
+                ["", "", ""],
+                ["", "", ""]
+            ];
+            $(".xo-cell").text("");
+        }
+    </script>
